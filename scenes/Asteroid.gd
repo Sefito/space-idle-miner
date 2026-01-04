@@ -53,6 +53,14 @@ func take_damage(damage: float) -> void:
 		_on_destroyed()
 
 func _on_destroyed() -> void:
+	# Disconnect signals connected in _ready() before freeing the node
+	if input_event.is_connected(_on_input_event):
+		input_event.disconnect(_on_input_event)
+	if mouse_entered.is_connected(_on_mouse_entered):
+		mouse_entered.disconnect(_on_mouse_entered)
+	if mouse_exited.is_connected(_on_mouse_exited):
+		mouse_exited.disconnect(_on_mouse_exited)
+	
 	# Grant minerals reward
 	destroyed.emit(self)
 	queue_free()
