@@ -35,6 +35,11 @@ func _ready() -> void:
 	Game.state_changed.connect(_on_game_state_changed)
 	_update_visibility()
 
+func _exit_tree() -> void:
+	# Clean up signal connection
+	if Game.state_changed.is_connected(_on_game_state_changed):
+		Game.state_changed.disconnect(_on_game_state_changed)
+
 func _process(delta: float) -> void:
 	if not visible:
 		return
@@ -69,9 +74,10 @@ func _generate_asteroid() -> void:
 	var num_points = randi_range(8, 12)
 	var base_radius = randf_range(80, 120)
 	var points: PackedVector2Array = []
+	var angle_step = TAU / num_points
 	
 	for i in range(num_points):
-		var angle = (TAU / num_points) * i
+		var angle = angle_step * i
 		# Add randomness to create irregular shape
 		var radius_variation = randf_range(0.7, 1.3)
 		var radius = base_radius * radius_variation
