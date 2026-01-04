@@ -68,6 +68,12 @@ func _on_destroyed() -> void:
 	queue_free()
 
 func _randomize_appearance() -> void:
+	# Select random asteroid frame (0-5 for 6 different asteroids in spritesheet)
+	# The asteroids.png contains 6 asteroids arranged in a 3x2 grid
+	sprite.hframes = 3  # 3 columns
+	sprite.vframes = 2  # 2 rows
+	sprite.frame = randi_range(0, 5)  # Select one of the 6 asteroids
+	
 	# Random rotation for variety
 	sprite.rotation = randf() * TAU
 	
