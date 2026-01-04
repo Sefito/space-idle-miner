@@ -11,6 +11,8 @@ signal values_changed()
 var state: State = State.SHOP
 var minerals_total: float = 0.0
 var minerals_run: float = 0.0
+
+# Base stats (can be modified by upgrades)
 var mining_rate: float = 1.0
 var expedition_duration: float = 30.0
 var time_left: float = 0.0
