@@ -3,6 +3,8 @@ extends Area2D
 # Asteroid properties
 @export var max_hp: float = 100.0
 @export var reward_minerals: float = 10.0
+@export var progress_bar_offset: Vector2 = Vector2(-60, -150)
+@export var progress_bar_size: Vector2 = Vector2(120, 10)
 
 var hp: float
 var is_targeted: bool = false
@@ -26,8 +28,8 @@ func _ready() -> void:
 	# Setup progress bar
 	progress_bar.max_value = max_hp
 	progress_bar.value = hp
-	progress_bar.position = Vector2(-60, -150)
-	progress_bar.size = Vector2(120, 10)
+	progress_bar.position = progress_bar_offset
+	progress_bar.size = progress_bar_size
 	progress_bar.visible = false
 	
 	# Connect input signal

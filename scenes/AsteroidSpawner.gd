@@ -56,6 +56,13 @@ func spawn_asteroid() -> void:
 		
 		attempts += 1
 	
+	# If no valid position found after max attempts, use fallback position far from expected ship location
+	if not valid_position:
+		spawn_pos = Vector2(
+			spawn_area.position.x + spawn_area.size.x * 0.75,
+			spawn_area.position.y + spawn_area.size.y * 0.5
+		)
+	
 	asteroid.position = spawn_pos
 	
 	# Connect signals
@@ -72,9 +79,8 @@ func _on_asteroid_destroyed(asteroid: Area2D) -> void:
 	
 	# Spawn replacement if below target
 	if current_asteroids.size() < target_asteroid_count:
-		# Small delay before respawn
-		await get_tree().create_timer(0.5).timeout
-		spawn_asteroid()
+		# Use call_deferred to avoid spawning during physics processing
+		call_deferred("spawn_asteroid")
 
 func _on_asteroid_clicked(asteroid: Area2D) -> void:
 	# Bubble up the click event to parent (Expedition controller)
