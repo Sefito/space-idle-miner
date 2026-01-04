@@ -50,6 +50,8 @@ func end_expedition() -> void:
 	time_left = 0.0
 	state_changed.emit(state)
 	values_changed.emit()
+	# Save progress after expedition
+	Save.save_game()
 
 func reset_run_values() -> void:
 	minerals_run = 0.0

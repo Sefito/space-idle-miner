@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Game="*res://autoload/Game.gd"
 Upgrades="*res://autoload/Upgrades.gd"
+Save="*res://autoload/Save.gd"
 
 [display]
 
