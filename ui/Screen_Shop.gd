@@ -251,4 +251,6 @@ func _on_reset_confirmed() -> void:
 	Save.reset_save()
 	# Recreate the upgrade UI to reflect the reset
 	_create_upgrade_ui()
+	# Update all values to show the reset state
+	_update_values()
 
