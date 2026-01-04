@@ -3,6 +3,8 @@ extends Area2D
 # Asteroid properties
 @export var max_hp: float = 100.0
 @export var reward_minerals: float = 10.0
+# NOTE: The default offset and size are tuned for asteroids with base_radius 50-80
+# in _generate_shape(). If you change the asteroid size, adjust these values accordingly.
 @export var progress_bar_offset: Vector2 = Vector2(-60, -150)
 @export var progress_bar_size: Vector2 = Vector2(120, 10)
 
@@ -53,7 +55,7 @@ func take_damage(damage: float) -> void:
 		_on_destroyed()
 
 func _on_destroyed() -> void:
-	# Disconnect signals connected in _ready() before freeing the node
+	# Disconnect signals before freeing the node
 	if input_event.is_connected(_on_input_event):
 		input_event.disconnect(_on_input_event)
 	if mouse_entered.is_connected(_on_mouse_entered):
@@ -61,7 +63,7 @@ func _on_destroyed() -> void:
 	if mouse_exited.is_connected(_on_mouse_exited):
 		mouse_exited.disconnect(_on_mouse_exited)
 	
-	# Grant minerals reward
+	# Emit destroyed signal; reward handling is done by the signal listener
 	destroyed.emit(self)
 	queue_free()
 
@@ -92,8 +94,9 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			clicked.emit(self)
 
 func _on_mouse_entered() -> void:
-	# Add hover effect
-	polygon.color = Color(0.6, 0.55, 0.5)
+	# Add hover effect only if not targeted
+	if not is_targeted:
+		polygon.color = Color(0.6, 0.55, 0.5)
 
 func _on_mouse_exited() -> void:
 	# Remove hover effect and restore color based on targeted state

@@ -46,7 +46,7 @@ func spawn_asteroid() -> void:
 		)
 		
 		# Check distance from ship
-		if ship_ref:
+		if is_instance_valid(ship_ref):
 			var distance = spawn_pos.distance_to(ship_ref.position)
 			if distance >= min_distance_to_ship:
 				valid_position = true
@@ -91,6 +91,7 @@ func clear_asteroids() -> void:
 		if is_instance_valid(asteroid):
 			asteroid.queue_free()
 	current_asteroids.clear()
+	ship_ref = null
 
 func get_nearest_asteroid(from_position: Vector2) -> Area2D:
 	var nearest: Area2D = null

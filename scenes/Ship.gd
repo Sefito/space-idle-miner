@@ -30,6 +30,9 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		return
 	
+	# Update viewport rect in case of window resize
+	viewport_rect = get_viewport_rect()
+	
 	# Get input direction
 	var input_dir = Vector2.ZERO
 	input_dir.x = Input.get_axis("move_left", "move_right")

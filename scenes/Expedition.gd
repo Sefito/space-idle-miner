@@ -122,8 +122,7 @@ func set_target(asteroid: Area2D) -> void:
 	if current_target:
 		current_target.set_targeted(true)
 		# Connect to destroyed signal
-		if not current_target.destroyed.is_connected(_on_target_destroyed):
-			current_target.destroyed.connect(_on_target_destroyed)
+		current_target.destroyed.connect(_on_target_destroyed)
 
 func find_nearest_asteroid() -> void:
 	var nearest = asteroid_spawner.get_nearest_asteroid(ship.position)
