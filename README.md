@@ -70,6 +70,48 @@ space-idle-miner/
 - **Versión de Godot**: 4.5
 - **Escena principal**: `res://scenes/Main.tscn`
 
+## Sistema de Upgrades
+
+El juego incluye un sistema de mejoras (upgrades) basado en datos que permite al jugador desbloquear y comprar mejoras en forma de árbol de dependencias.
+
+### Formato de upgrades.json
+
+El archivo `data/upgrades.json` define todas las mejoras disponibles en el juego. Cada upgrade tiene la siguiente estructura:
+
+```json
+{
+  "id": "unique_identifier",
+  "name": "Nombre visible",
+  "desc": "Descripción de la mejora",
+  "max_level": 5,
+  "cost_base": 10.0,
+  "cost_growth": 1.5,
+  "requires": ["prerequisite_id"],
+  "effects": {
+    "mining_rate_mult": 0.2,
+    "duration_add": -3.0
+  }
+}
+```
+
+**Campos:**
+- `id`: Identificador único del upgrade
+- `name`: Nombre mostrado en la UI
+- `desc`: Descripción de qué hace el upgrade
+- `max_level`: Nivel máximo que se puede alcanzar
+- `cost_base`: Coste base del primer nivel
+- `cost_growth`: Multiplicador de crecimiento del coste (coste = base × growth^nivel)
+- `requires`: Array de IDs de upgrades que deben tener al menos nivel 1
+- `effects`: Efectos por nivel
+  - `mining_rate_mult`: Multiplicador de velocidad de minería (aditivo)
+  - `duration_add`: Segundos añadidos a la duración de expedición (puede ser negativo)
+
+### Cálculo de Stats
+
+Los stats del juego se calculan de la siguiente manera:
+- **mining_rate** = base_rate × (1 + suma de todos los mining_rate_mult)
+- **expedition_duration** = base_duration + suma de todos los duration_add
+
 ## Desarrollo
 
 Este proyecto está en desarrollo activo. Siéntete libre de contribuir o reportar problemas en el repositorio de GitHub.

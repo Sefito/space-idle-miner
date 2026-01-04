@@ -1,0 +1,151 @@
+{
+  "upgrades": [
+    {
+      "id": "basic_drill",
+      "name": "Taladro Básico",
+      "desc": "Mejora la velocidad de minería base",
+      "max_level": 5,
+      "cost_base": 10.0,
+      "cost_growth": 1.5,
+      "requires": [],
+      "effects": {
+        "mining_rate_mult": 0.2
+      }
+    },
+    {
+      "id": "advanced_drill",
+      "name": "Taladro Avanzado",
+      "desc": "Taladro de alta potencia para minería rápida",
+      "max_level": 5,
+      "cost_base": 100.0,
+      "cost_growth": 1.8,
+      "requires": ["basic_drill"],
+      "effects": {
+        "mining_rate_mult": 0.5
+      }
+    },
+    {
+      "id": "quantum_drill",
+      "name": "Taladro Cuántico",
+      "desc": "Tecnología de punta para minería ultrarrápida",
+      "max_level": 3,
+      "cost_base": 500.0,
+      "cost_growth": 2.0,
+      "requires": ["advanced_drill"],
+      "effects": {
+        "mining_rate_mult": 1.0
+      }
+    },
+    {
+      "id": "expedition_prep",
+      "name": "Preparación de Expedición",
+      "desc": "Reduce el tiempo de expedición",
+      "max_level": 5,
+      "cost_base": 20.0,
+      "cost_growth": 1.6,
+      "requires": [],
+      "effects": {
+        "duration_add": -3.0
+      }
+    },
+    {
+      "id": "time_compression",
+      "name": "Compresión Temporal",
+      "desc": "Tecnología avanzada para reducir aún más el tiempo",
+      "max_level": 3,
+      "cost_base": 200.0,
+      "cost_growth": 2.0,
+      "requires": ["expedition_prep"],
+      "effects": {
+        "duration_add": -5.0
+      }
+    },
+    {
+      "id": "cargo_hold",
+      "name": "Bodega de Carga",
+      "desc": "Aumenta la capacidad de recolección",
+      "max_level": 5,
+      "cost_base": 30.0,
+      "cost_growth": 1.7,
+      "requires": [],
+      "effects": {
+        "mining_rate_mult": 0.15
+      }
+    },
+    {
+      "id": "efficient_extraction",
+      "name": "Extracción Eficiente",
+      "desc": "Optimiza el proceso de minería",
+      "max_level": 4,
+      "cost_base": 50.0,
+      "cost_growth": 1.8,
+      "requires": ["basic_drill", "cargo_hold"],
+      "effects": {
+        "mining_rate_mult": 0.3
+      }
+    },
+    {
+      "id": "automated_systems",
+      "name": "Sistemas Automatizados",
+      "desc": "Automatización avanzada para mejor rendimiento",
+      "max_level": 5,
+      "cost_base": 150.0,
+      "cost_growth": 1.9,
+      "requires": ["efficient_extraction"],
+      "effects": {
+        "mining_rate_mult": 0.4
+      }
+    },
+    {
+      "id": "scanner_upgrade",
+      "name": "Escáner Mejorado",
+      "desc": "Localiza recursos más rápidamente",
+      "max_level": 4,
+      "cost_base": 40.0,
+      "cost_growth": 1.6,
+      "requires": [],
+      "effects": {
+        "mining_rate_mult": 0.1,
+        "duration_add": -2.0
+      }
+    },
+    {
+      "id": "energy_core",
+      "name": "Núcleo de Energía",
+      "desc": "Proporciona energía adicional para todas las operaciones",
+      "max_level": 5,
+      "cost_base": 80.0,
+      "cost_growth": 1.7,
+      "requires": ["scanner_upgrade"],
+      "effects": {
+        "mining_rate_mult": 0.25
+      }
+    },
+    {
+      "id": "fusion_reactor",
+      "name": "Reactor de Fusión",
+      "desc": "Energía casi ilimitada para operaciones máximas",
+      "max_level": 3,
+      "cost_base": 400.0,
+      "cost_growth": 2.2,
+      "requires": ["energy_core", "advanced_drill"],
+      "effects": {
+        "mining_rate_mult": 0.8,
+        "duration_add": -4.0
+      }
+    },
+    {
+      "id": "master_miner",
+      "name": "Maestro Minero",
+      "desc": "La mejora definitiva que potencia todo",
+      "max_level": 1,
+      "cost_base": 1000.0,
+      "cost_growth": 1.0,
+      "requires": ["quantum_drill", "fusion_reactor", "automated_systems"],
+      "effects": {
+        "mining_rate_mult": 2.0,
+        "duration_add": -10.0
+      }
+    }
+  ]
+}
