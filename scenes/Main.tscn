@@ -1,3 +1,10 @@
-[gd_scene format=3 uid="uid://b2v8qwxn3dvon"]
+[gd_scene load_steps=3 format=3 uid="uid://b2v8qwxn3dvon"]
+
+[ext_resource type="PackedScene" uid="uid://byxavqt4pyw15" path="res://ui/HUD_Expedition.tscn" id="1_k8nt5"]
+[ext_resource type="PackedScene" uid="uid://dmxomxdgr1uxn" path="res://ui/Screen_Shop.tscn" id="2_1fwt0"]
 
 [node name="Main" type="Node"]
+
+[node name="HUD_Expedition" parent="." instance=ExtResource("1_k8nt5")]
+
+[node name="Screen_Shop" parent="." instance=ExtResource("2_1fwt0")]
