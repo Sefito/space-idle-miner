@@ -26,6 +26,8 @@ func _ready() -> void:
 	# Setup camera
 	camera.position = Vector2(960, 540)  # Center of 1920x1080
 	camera.enabled = true
+	camera.position_smoothing_enabled = true
+	camera.position_smoothing_speed = 5.0
 	
 	# Setup impact particles
 	impact_particles.emitting = false
@@ -51,42 +53,45 @@ func _exit_tree() -> void:
 		Game.state_changed.disconnect(_on_game_state_changed)
 
 func _process(delta: float) -> void:
-	if not visible:
+	if not visible or Game.state != Game.State.EXPEDITION:
 		return
 	
-	# Handle mining and laser visual feedback
-	if Game.state == Game.State.EXPEDITION:
-		# Ensure we have a target
-		if not current_target or not is_instance_valid(current_target):
-			find_nearest_asteroid()
-		
-		# Mine current target
-		if current_target and is_instance_valid(current_target):
-			# Deal damage based on mining rate
-			var damage = Game.mining_rate * delta
-			current_target.take_damage(damage)
-			
-			# Update laser
-			time_since_last_laser += delta
-			if time_since_last_laser >= MINING_LASER_INTERVAL:
-				_show_laser()
-				time_since_last_laser = 0.0
-		
-		# Update laser visibility timer
-		if laser_visible_time > 0:
-			laser_visible_time -= delta
-			if laser_visible_time <= 0:
-				laser.visible = false
+	# Ensure we have a target
+	if not current_target or not is_instance_valid(current_target):
+		find_nearest_asteroid()
 	
-	# Update camera to follow ship with smoothing
+	# Mine current target
+	if current_target and is_instance_valid(current_target):
+		# Deal damage based on mining rate
+		var damage = Game.mining_rate * delta
+		current_target.take_damage(damage)
+		
+		# Update laser
+		time_since_last_laser += delta
+		if time_since_last_laser >= MINING_LASER_INTERVAL:
+			_show_laser()
+			time_since_last_laser = 0.0
+	
+	# Update laser visibility timer
+	if laser_visible_time > 0:
+		laser_visible_time -= delta
+		if laser_visible_time <= 0:
+			laser.visible = false
+	
+	# Update camera to follow ship (smoothing is handled by Camera2D)
 	if ship:
-		camera.position = camera.position.lerp(ship.position, 5.0 * delta)
+		camera.position = ship.position
 
 func _on_game_state_changed(_new_state: Game.State) -> void:
 	_update_visibility()
 	if visible and Game.state == Game.State.EXPEDITION:
 		# Start new expedition
 		_start_expedition()
+	elif Game.state == Game.State.SHOP:
+		# Clean up when leaving expedition
+		current_target = null
+		laser.visible = false
+		asteroid_spawner.clear_asteroids()
 
 func _start_expedition() -> void:
 	# Reset ship position

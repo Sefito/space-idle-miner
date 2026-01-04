@@ -25,6 +25,11 @@ func _ready() -> void:
 	viewport_rect = get_viewport_rect()
 
 func _physics_process(delta: float) -> void:
+	# Only process movement during expedition
+	if Game.state != Game.State.EXPEDITION:
+		velocity = Vector2.ZERO
+		return
+	
 	# Get input direction
 	var input_dir = Vector2.ZERO
 	input_dir.x = Input.get_axis("move_left", "move_right")
