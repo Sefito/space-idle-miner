@@ -228,10 +228,9 @@ func _create_reset_button() -> void:
 	reset_button.add_theme_font_size_override("font_size", 20)
 	reset_button.pressed.connect(_on_reset_button_pressed)
 	
-	# Add it after the start button
+	# Add it to the end of the VBoxContainer
 	var vbox = $CenterContainer/VBoxContainer
 	vbox.add_child(reset_button)
-	vbox.move_child(reset_button, vbox.get_child_count() - 1)
 
 func _create_confirmation_dialog() -> void:
 	# Create confirmation dialog
