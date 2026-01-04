@@ -55,7 +55,11 @@ func load_game() -> void:
 	
 	# Restore levels_by_id
 	if save_data.has("levels_by_id"):
-		Upgrades.levels_by_id = save_data["levels_by_id"]
+		var saved_levels = save_data["levels_by_id"]
+		# Only restore levels for upgrade IDs that exist in the current game
+		for upgrade_id in saved_levels:
+			if Upgrades.levels_by_id.has(upgrade_id):
+				Upgrades.levels_by_id[upgrade_id] = saved_levels[upgrade_id]
 		print("Loaded upgrade levels")
 		# Recalculate stats based on loaded upgrades
 		Upgrades.recalculate_stats()
