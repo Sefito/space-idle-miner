@@ -76,4 +76,4 @@ Este proyecto está en desarrollo activo. Siéntete libre de contribuir o report
 
 ## Licencia
 
-Por favor, consulta el archivo LICENSE en el repositorio para más información sobre los términos de uso.
+Este proyecto aún no tiene una licencia definida. Para más información sobre el uso del código, contacta con el autor del repositorio.
