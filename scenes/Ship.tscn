@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqvk8c5h7y1nx"]
+
+[ext_resource type="Script" path="res://scenes/Ship.gd" id="1_ship"]
+
+[node name="Ship" type="CharacterBody2D"]
+script = ExtResource("1_ship")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]

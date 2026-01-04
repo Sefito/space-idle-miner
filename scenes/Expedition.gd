@@ -1,9 +1,14 @@
 extends Node2D
 
-# Visual elements
-@onready var ship: Polygon2D = $Ship
-@onready var asteroid: Polygon2D = $Asteroid
+# Scene references
+@onready var ship: CharacterBody2D = $Ship
+@onready var asteroid_spawner: Node2D = $AsteroidSpawner
 @onready var laser: Line2D = $Laser
+@onready var camera: Camera2D = $Camera2D
+@onready var impact_particles: CPUParticles2D = $ImpactParticles
+
+# Target system
+var current_target: Area2D = null
 
 # Mining visual feedback
 var laser_visible_time: float = 0.0
@@ -13,23 +18,28 @@ const MINING_LASER_INTERVAL: float = 0.5
 var time_since_last_laser: float = 0.0
 
 func _ready() -> void:
-	# Set up ship visual (simple triangle/rocket shape)
-	ship.polygon = PackedVector2Array([
-		Vector2(0, -30),
-		Vector2(-15, 15),
-		Vector2(0, 10),
-		Vector2(15, 15)
-	])
-	ship.color = Color(0.7, 0.8, 0.9)  # Light blue-gray
-	ship.position = Vector2(400, 540)
-	
-	# Generate initial asteroid
-	_generate_asteroid()
-	
 	# Set up laser
 	laser.default_color = Color(1.0, 0.2, 0.2, 0.8)  # Red laser
 	laser.width = 3.0
 	laser.visible = false
+	
+	# Setup camera
+	camera.position = Vector2(960, 540)  # Center of 1920x1080
+	camera.enabled = true
+	
+	# Setup impact particles
+	impact_particles.emitting = false
+	impact_particles.one_shot = true
+	impact_particles.amount = 20
+	impact_particles.lifetime = 0.5
+	impact_particles.explosiveness = 0.8
+	impact_particles.direction = Vector2(0, -1)
+	impact_particles.spread = 180
+	impact_particles.initial_velocity_min = 50
+	impact_particles.initial_velocity_max = 150
+	impact_particles.scale_amount_min = 2
+	impact_particles.scale_amount_max = 5
+	impact_particles.color = Color(0.9, 0.6, 0.3)
 	
 	# Connect to game state
 	Game.state_changed.connect(_on_game_state_changed)
@@ -44,54 +54,103 @@ func _process(delta: float) -> void:
 	if not visible:
 		return
 	
-	# Handle laser visual feedback during mining
+	# Handle mining and laser visual feedback
 	if Game.state == Game.State.EXPEDITION:
-		time_since_last_laser += delta
+		# Ensure we have a target
+		if not current_target or not is_instance_valid(current_target):
+			find_nearest_asteroid()
 		
-		# Show laser periodically to indicate mining
-		if time_since_last_laser >= MINING_LASER_INTERVAL:
-			_show_laser()
-			time_since_last_laser = 0.0
+		# Mine current target
+		if current_target and is_instance_valid(current_target):
+			# Deal damage based on mining rate
+			var damage = Game.mining_rate * delta
+			current_target.take_damage(damage)
+			
+			# Update laser
+			time_since_last_laser += delta
+			if time_since_last_laser >= MINING_LASER_INTERVAL:
+				_show_laser()
+				time_since_last_laser = 0.0
 		
 		# Update laser visibility timer
 		if laser_visible_time > 0:
 			laser_visible_time -= delta
 			if laser_visible_time <= 0:
 				laser.visible = false
+	
+	# Update camera to follow ship with smoothing
+	if ship:
+		camera.position = camera.position.lerp(ship.position, 5.0 * delta)
 
 func _on_game_state_changed(_new_state: Game.State) -> void:
 	_update_visibility()
-	if visible:
-		# Generate new asteroid when starting a new expedition
-		_generate_asteroid()
-		time_since_last_laser = 0.0
+	if visible and Game.state == Game.State.EXPEDITION:
+		# Start new expedition
+		_start_expedition()
+
+func _start_expedition() -> void:
+	# Reset ship position
+	ship.position = Vector2(400, 540)
+	ship.velocity = Vector2.ZERO
+	
+	# Spawn asteroids
+	asteroid_spawner.spawn_initial_asteroids(ship)
+	
+	# Find initial target
+	find_nearest_asteroid()
+	
+	time_since_last_laser = 0.0
 
 func _update_visibility() -> void:
 	visible = (Game.state == Game.State.EXPEDITION)
 
-func _generate_asteroid() -> void:
-	# Procedurally generate asteroid shape
-	var num_points = randi_range(8, 12)
-	var base_radius = randf_range(80, 120)
-	var points: PackedVector2Array = []
-	var angle_step = TAU / num_points
+func set_target(asteroid: Area2D) -> void:
+	# Clear previous target highlight
+	if current_target and is_instance_valid(current_target):
+		current_target.set_targeted(false)
 	
-	for i in range(num_points):
-		var angle = angle_step * i
-		# Add randomness to create irregular shape
-		var radius_variation = randf_range(0.7, 1.3)
-		var radius = base_radius * radius_variation
-		var point = Vector2(cos(angle) * radius, sin(angle) * radius)
-		points.append(point)
+	# Set new target
+	current_target = asteroid
+	if current_target:
+		current_target.set_targeted(true)
+		# Connect to destroyed signal if not already connected
+		if not current_target.destroyed.is_connected(_on_target_destroyed):
+			current_target.destroyed.connect(_on_target_destroyed)
+
+func find_nearest_asteroid() -> void:
+	var nearest = asteroid_spawner.get_nearest_asteroid(ship.position)
+	if nearest:
+		set_target(nearest)
+
+func _on_target_destroyed(asteroid: Area2D) -> void:
+	# Grant mineral reward
+	Game.minerals_run += asteroid.reward_minerals
+	Game.minerals_total += asteroid.reward_minerals
+	Game.values_changed.emit()
 	
-	asteroid.polygon = points
-	asteroid.color = Color(0.5, 0.45, 0.4)  # Rocky brown-gray
-	asteroid.position = Vector2(1520, 540)
+	# Show impact effect
+	if impact_particles:
+		impact_particles.position = asteroid.position
+		impact_particles.emitting = true
+	
+	# Clear target and find new one
+	if current_target == asteroid:
+		current_target = null
+		find_nearest_asteroid()
 
 func _show_laser() -> void:
-	# Update laser line from ship to asteroid
+	if not current_target or not is_instance_valid(current_target):
+		laser.visible = false
+		return
+	
+	# Update laser line from ship to current target
 	laser.clear_points()
 	laser.add_point(ship.position)
-	laser.add_point(asteroid.position)
+	laser.add_point(current_target.position)
 	laser.visible = true
 	laser_visible_time = LASER_FLASH_DURATION
+	
+	# Show particles at impact point
+	if impact_particles and randf() < 0.3:  # 30% chance
+		impact_particles.position = current_target.position
+		impact_particles.emitting = true

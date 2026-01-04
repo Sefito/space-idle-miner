@@ -25,11 +25,7 @@ func _process(delta: float) -> void:
 		# Decrease time
 		time_left -= delta
 		
-		# Mine minerals
-		var minerals_mined = mining_rate * delta
-		minerals_run += minerals_mined
-		minerals_total += minerals_mined
-		
+		# Emit values changed for UI update
 		values_changed.emit()
 		
 		# Check if expedition ended
