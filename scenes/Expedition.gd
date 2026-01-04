@@ -23,12 +23,10 @@ func _ready() -> void:
 	laser.width = 3.0
 	laser.visible = false
 	
-	# Setup camera
+	# Setup camera - fixed at center of viewport
 	var viewport_size := get_viewport_rect().size
 	camera.position = viewport_size * 0.5  # Center of current viewport
 	camera.enabled = true
-	camera.position_smoothing_enabled = true
-	camera.position_smoothing_speed = 5.0
 	
 	# Setup impact particles
 	impact_particles.emitting = false
@@ -78,10 +76,6 @@ func _process(delta: float) -> void:
 		laser_visible_time -= delta
 		if laser_visible_time <= 0:
 			laser.visible = false
-	
-	# Update camera to follow ship (smoothing is handled by Camera2D)
-	if ship:
-		camera.position = ship.position
 
 func _on_game_state_changed(_new_state: Game.State) -> void:
 	_update_visibility()
@@ -93,10 +87,14 @@ func _on_game_state_changed(_new_state: Game.State) -> void:
 		current_target = null
 		laser.visible = false
 		asteroid_spawner.clear_asteroids()
+		# Reset camera to center when switching to shop
+		var viewport_size := get_viewport_rect().size
+		camera.position = viewport_size * 0.5
 
 func _start_expedition() -> void:
-	# Reset ship position
-	ship.position = Vector2(400, 540)
+	# Reset ship position to center of viewport
+	var viewport_size := get_viewport_rect().size
+	ship.position = viewport_size * 0.5  # Center of viewport
 	ship.velocity = Vector2.ZERO
 	
 	# Spawn asteroids

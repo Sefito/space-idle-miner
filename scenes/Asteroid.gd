@@ -5,8 +5,8 @@ extends Area2D
 @export var reward_minerals: float = 10.0
 # NOTE: The default offset and size are tuned for the asteroid sprite size.
 # Adjust these values if you change the sprite scale.
-@export var progress_bar_offset: Vector2 = Vector2(-60, -80)
-@export var progress_bar_size: Vector2 = Vector2(120, 10)
+@export var progress_bar_offset: Vector2 = Vector2(-40, -30)
+@export var progress_bar_size: Vector2 = Vector2(80, 8)
 
 var hp: float
 var is_targeted: bool = false
@@ -77,8 +77,8 @@ func _randomize_appearance() -> void:
 	# Random rotation for variety
 	sprite.rotation = randf() * TAU
 	
-	# Random scale variation (0.8 to 1.2)
-	var scale_factor = randf_range(0.8, 1.2)
+	# Base scale is 1/3 of original, then apply random variation (0.8 to 1.2)
+	var scale_factor = (1.0 / 3.0) * randf_range(0.8, 1.2)
 	sprite.scale = Vector2(scale_factor, scale_factor)
 	
 	# Slight color tint variation for more variety
