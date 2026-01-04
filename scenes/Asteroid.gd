@@ -88,8 +88,8 @@ func _on_mouse_entered() -> void:
 	polygon.color = Color(0.6, 0.55, 0.5)
 
 func _on_mouse_exited() -> void:
-	# Remove hover effect
-	polygon.color = Color(0.5, 0.45, 0.4)
+	# Remove hover effect and restore color based on targeted state
+	set_targeted(is_targeted)
 
 func set_targeted(targeted: bool) -> void:
 	is_targeted = targeted
