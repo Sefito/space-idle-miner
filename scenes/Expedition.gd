@@ -158,7 +158,7 @@ func _show_laser() -> void:
 	laser.visible = true
 	laser_visible_time = LASER_FLASH_DURATION
 	
-	# Show particles at impact point
-	if impact_particles and randf() < 0.3:  # 30% chance
+	# Show particles at impact point (consistent feedback)
+	if impact_particles:
 		impact_particles.position = current_target.position
 		impact_particles.emitting = true
