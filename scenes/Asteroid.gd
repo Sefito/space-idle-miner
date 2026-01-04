@@ -3,18 +3,18 @@ extends Area2D
 # Asteroid properties
 @export var max_hp: float = 100.0
 @export var reward_minerals: float = 10.0
-# NOTE: The default offset and size are tuned for asteroids with base_radius 50-80
-# in _generate_shape(). If you change the asteroid size, adjust these values accordingly.
-@export var progress_bar_offset: Vector2 = Vector2(-60, -150)
+# NOTE: The default offset and size are tuned for the asteroid sprite size.
+# Adjust these values if you change the sprite scale.
+@export var progress_bar_offset: Vector2 = Vector2(-60, -80)
 @export var progress_bar_size: Vector2 = Vector2(120, 10)
 
 var hp: float
 var is_targeted: bool = false
 
 # Visual elements
-@onready var polygon: Polygon2D = $Polygon2D
+@onready var sprite: Sprite2D = $Sprite2D
 @onready var progress_bar: ProgressBar = $ProgressBar
-@onready var collision: CollisionPolygon2D = $CollisionPolygon2D
+@onready var collision: CollisionShape2D = $CollisionShape2D
 
 # Signals
 signal clicked(asteroid: Area2D)
@@ -24,8 +24,8 @@ func _ready() -> void:
 	# Initialize health
 	hp = max_hp
 	
-	# Generate procedural asteroid shape
-	_generate_shape()
+	# Randomize asteroid appearance
+	_randomize_appearance()
 	
 	# Setup progress bar
 	progress_bar.max_value = max_hp
@@ -67,26 +67,17 @@ func _on_destroyed() -> void:
 	destroyed.emit(self)
 	queue_free()
 
-func _generate_shape() -> void:
-	# Procedurally generate asteroid shape
-	var num_points = randi_range(8, 12)
-	var base_radius = randf_range(50, 80)
-	var points: PackedVector2Array = []
-	var angle_step = TAU / num_points
+func _randomize_appearance() -> void:
+	# Random rotation for variety
+	sprite.rotation = randf() * TAU
 	
-	for i in range(num_points):
-		var angle = angle_step * i
-		# Add randomness to create irregular shape
-		var radius_variation = randf_range(0.7, 1.3)
-		var radius = base_radius * radius_variation
-		var point = Vector2(cos(angle) * radius, sin(angle) * radius)
-		points.append(point)
+	# Random scale variation (0.8 to 1.2)
+	var scale_factor = randf_range(0.8, 1.2)
+	sprite.scale = Vector2(scale_factor, scale_factor)
 	
-	polygon.polygon = points
-	polygon.color = Color(0.5, 0.45, 0.4)  # Rocky brown-gray
-	
-	# Use same points for collision
-	collision.polygon = points
+	# Slight color tint variation for more variety
+	var color_variation = randf_range(0.9, 1.1)
+	sprite.modulate = Color(color_variation, color_variation, color_variation)
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
@@ -94,9 +85,9 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			clicked.emit(self)
 
 func _on_mouse_entered() -> void:
-	# Add hover effect only if not targeted
+	# Add hover effect only if not targeted (slight brightness increase)
 	if not is_targeted:
-		polygon.color = Color(0.6, 0.55, 0.5)
+		sprite.modulate = Color(1.2, 1.2, 1.2)
 
 func _on_mouse_exited() -> void:
 	# Remove hover effect and restore color based on targeted state
@@ -105,6 +96,6 @@ func _on_mouse_exited() -> void:
 func set_targeted(targeted: bool) -> void:
 	is_targeted = targeted
 	if targeted:
-		polygon.color = Color(0.7, 0.3, 0.3)  # Red tint when targeted
+		sprite.modulate = Color(1.5, 0.8, 0.8)  # Red tint when targeted
 	else:
-		polygon.color = Color(0.5, 0.45, 0.4)  # Normal color
+		sprite.modulate = Color(1.0, 1.0, 1.0)  # Normal color

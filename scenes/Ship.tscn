@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bqvk8c5h7y1nx"]
+[gd_scene load_steps=4 format=3 uid="uid://bqvk8c5h7y1nx"]
 
 [ext_resource type="Script" path="res://scenes/Ship.gd" id="1_ship"]
+[ext_resource type="Texture2D" uid="uid://bwt5lhj8rg3xj" path="res://art/ship.png" id="2_ship_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 30.0
@@ -8,7 +9,8 @@ radius = 30.0
 [node name="Ship" type="CharacterBody2D"]
 script = ExtResource("1_ship")
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ship_texture")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1")

@@ -6,21 +6,12 @@ extends CharacterBody2D
 @export var friction: float = 800.0
 
 # Visual reference
-@onready var polygon: Polygon2D = $Polygon2D
+@onready var sprite: Sprite2D = $Sprite2D
 
 # Viewport bounds for clamping
 var viewport_rect: Rect2
 
 func _ready() -> void:
-	# Set up ship visual (simple triangle/rocket shape)
-	polygon.polygon = PackedVector2Array([
-		Vector2(0, -30),
-		Vector2(-15, 15),
-		Vector2(0, 10),
-		Vector2(15, 15)
-	])
-	polygon.color = Color(0.7, 0.8, 0.9)  # Light blue-gray
-	
 	# Get viewport size for boundary clamping
 	viewport_rect = get_viewport_rect()
 

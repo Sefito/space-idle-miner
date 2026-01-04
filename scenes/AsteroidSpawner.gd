@@ -4,22 +4,40 @@ extends Node2D
 @export var asteroid_scene: PackedScene
 @export var min_asteroids: int = 5
 @export var max_asteroids: int = 15
-@export var spawn_area: Rect2 = Rect2(100, 100, 1720, 880)
+# Spawn area margins as percentage of viewport (default: 5% margin on each side)
+@export var spawn_margin_percent: float = 0.05
 @export var min_distance_to_ship: float = 300.0
 
 var current_asteroids: Array = []
 var target_asteroid_count: int = 10
 var ship_ref: Node2D = null
+var spawn_area: Rect2
 
 func _ready() -> void:
 	# Load asteroid scene if not set
 	if not asteroid_scene:
 		asteroid_scene = preload("res://scenes/Asteroid.tscn")
+	
+	# Calculate spawn area based on viewport size with margins
+	_update_spawn_area()
+
+func _update_spawn_area() -> void:
+	var viewport_size = get_viewport_rect().size
+	var margin_x = viewport_size.x * spawn_margin_percent
+	var margin_y = viewport_size.y * spawn_margin_percent
+	spawn_area = Rect2(
+		margin_x,
+		margin_y,
+		viewport_size.x - (margin_x * 2),
+		viewport_size.y - (margin_y * 2)
+	)
 
 func spawn_initial_asteroids(ship: Node2D) -> void:
 	ship_ref = ship
 	# Set random target count for this expedition
 	target_asteroid_count = randi_range(min_asteroids, max_asteroids)
+	# Update spawn area in case viewport changed
+	_update_spawn_area()
 	# Clear any existing asteroids
 	clear_asteroids()
 	
