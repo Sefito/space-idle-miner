@@ -1,6 +1,7 @@
 extends Node2D
 
 # Scene references
+@onready var background: Sprite2D = $Background
 @onready var ship: CharacterBody2D = $Ship
 @onready var asteroid_spawner: Node2D = $AsteroidSpawner
 @onready var laser: Line2D = $Laser
@@ -18,13 +19,25 @@ const MINING_LASER_INTERVAL: float = 0.5
 var time_since_last_laser: float = 0.0
 
 func _ready() -> void:
+	# Setup background to cover viewport
+	var viewport_size := get_viewport_rect().size
+	if background and background.texture:
+		var texture_size = background.texture.get_size()
+		# Scale background to cover viewport (maintaining aspect ratio or stretching as needed)
+		var scale_x = viewport_size.x / texture_size.x
+		var scale_y = viewport_size.y / texture_size.y
+		# Use the larger scale to ensure full coverage
+		var scale_factor = max(scale_x, scale_y)
+		background.scale = Vector2(scale_factor, scale_factor)
+		# Center the background
+		background.position = Vector2.ZERO
+	
 	# Set up laser
 	laser.default_color = Color(1.0, 0.2, 0.2, 0.8)  # Red laser
 	laser.width = 3.0
 	laser.visible = false
 	
 	# Setup camera - fixed at center of viewport
-	var viewport_size := get_viewport_rect().size
 	camera.position = viewport_size * 0.5  # Center of current viewport
 	camera.enabled = true
 	

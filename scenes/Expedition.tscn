@@ -1,11 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://cjkx2p3h8y7vn"]
+[gd_scene load_steps=5 format=3 uid="uid://cjkx2p3h8y7vn"]
 
 [ext_resource type="Script" path="res://scenes/Expedition.gd" id="1_expedition"]
+[ext_resource type="Texture2D" uid="uid://cwhjd8yx5nq2f" path="res://art/expedition_background.png" id="2_background"]
 [ext_resource type="PackedScene" uid="uid://bqvk8c5h7y1nx" path="res://scenes/Ship.tscn" id="2_ship"]
 [ext_resource type="Script" path="res://scenes/AsteroidSpawner.gd" id="3_spawner"]
 
 [node name="Expedition" type="Node2D"]
 script = ExtResource("1_expedition")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2_background")
+centered = false
 
 [node name="Ship" parent="." instance=ExtResource("2_ship")]
 position = Vector2(400, 540)
