@@ -8,11 +8,16 @@ extends Control
 # Store upgrade UI elements for updates
 var upgrade_panels: Dictionary = {}
 
+# Confirmation dialog for reset
+var reset_confirmation_dialog: ConfirmationDialog
+
 func _ready() -> void:
 	Game.state_changed.connect(_on_game_state_changed)
 	Game.values_changed.connect(_on_game_values_changed)
 	Upgrades.upgrade_changed.connect(_on_upgrade_changed)
 	start_button.pressed.connect(_on_start_button_pressed)
+	_create_reset_button()
+	_create_confirmation_dialog()
 	_update_visibility()
 	_update_values()
 	_create_upgrade_ui()
@@ -213,4 +218,39 @@ func _on_buy_button_pressed(upgrade_id: String) -> void:
 
 func _on_start_button_pressed() -> void:
 	Game.start_expedition()
+
+func _create_reset_button() -> void:
+	# Create a reset button and add it to the VBoxContainer
+	var reset_button = Button.new()
+	reset_button.name = "ResetButton"
+	reset_button.text = "Resetear Partida"
+	reset_button.custom_minimum_size = Vector2(300, 50)
+	reset_button.add_theme_font_size_override("font_size", 20)
+	reset_button.pressed.connect(_on_reset_button_pressed)
+	
+	# Add it to the end of the VBoxContainer
+	var vbox = $CenterContainer/VBoxContainer
+	vbox.add_child(reset_button)
+
+func _create_confirmation_dialog() -> void:
+	# Create confirmation dialog
+	reset_confirmation_dialog = ConfirmationDialog.new()
+	reset_confirmation_dialog.title = "Confirmar Reset"
+	reset_confirmation_dialog.dialog_text = "¿Estás seguro de que quieres resetear toda tu partida?\nSe perderán todos los minerales y mejoras."
+	reset_confirmation_dialog.ok_button_text = "Sí, resetear"
+	reset_confirmation_dialog.cancel_button_text = "Cancelar"
+	reset_confirmation_dialog.confirmed.connect(_on_reset_confirmed)
+	add_child(reset_confirmation_dialog)
+
+func _on_reset_button_pressed() -> void:
+	# Show confirmation dialog
+	reset_confirmation_dialog.popup_centered()
+
+func _on_reset_confirmed() -> void:
+	# Reset the save
+	Save.reset_save()
+	# Recreate the upgrade UI to reflect the reset
+	_create_upgrade_ui()
+	# Update all values to show the reset state
+	_update_values()
 

@@ -121,6 +121,9 @@ func buy(upgrade_id: String) -> bool:
 	
 	print("Bought upgrade: ", upgrade_id, " to level ", levels_by_id[upgrade_id])
 	
+	# Save progress after buying upgrade
+	Save.save_game()
+	
 	return true
 
 # Recalculate game stats based on current upgrades
