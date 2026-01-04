@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5yt4jx5w80r4"]
+
+[ext_resource type="Script" path="res://ui/UpgradeNode.gd" id="1_7g77f"]
+
+[node name="UpgradeNode" type="PanelContainer"]
+custom_minimum_size = Vector2(1200, 120)
+offset_right = 1200.0
+offset_bottom = 120.0
+script = ExtResource("1_7g77f")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LeftSection" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="NameLabel" type="Label" parent="HBoxContainer/LeftSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Upgrade Name"
+
+[node name="DescLabel" type="Label" parent="HBoxContainer/LeftSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Description of the upgrade"
+autowrap_mode = 3
+
+[node name="LevelLabel" type="Label" parent="HBoxContainer/LeftSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Level: 0 / 10"
+
+[node name="RightSection" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CostLabel" type="Label" parent="HBoxContainer/RightSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Cost: 100 minerals"
+horizontal_alignment = 1
+
+[node name="PurchaseButton" type="Button" parent="HBoxContainer/RightSection"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Purchase"
+
+[node name="LockedLabel" type="Label" parent="HBoxContainer/RightSection"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "LOCKED"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,3 +1,17 @@
-[gd_scene format=3 uid="uid://b2v8qwxn3dvon"]
+[gd_scene load_steps=5 format=3 uid="uid://b2v8qwxn3dvon"]
+
+[ext_resource type="Script" path="res://scenes/Main.gd" id="1_v0hkr"]
+[ext_resource type="PackedScene" uid="uid://cptb5cgxlvvlb" path="res://ui/ExpeditionScreen.tscn" id="2_expedn"]
+[ext_resource type="PackedScene" uid="uid://b8igmnj4lhxmw" path="res://ui/EndExpeditionScreen.tscn" id="3_endexp"]
+[ext_resource type="PackedScene" uid="uid://cqasbgm5xywml" path="res://ui/UpgradeTreeUI.tscn" id="4_upgtree"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_v0hkr")
+
+[node name="ExpeditionScreen" parent="." instance=ExtResource("2_expedn")]
+
+[node name="EndExpeditionScreen" parent="." instance=ExtResource("3_endexp")]
+visible = false
+
+[node name="UpgradeTreeUI" parent="." instance=ExtResource("4_upgtree")]
+visible = false
