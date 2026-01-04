@@ -15,12 +15,11 @@ func _ready() -> void:
 	# Load asteroid scene if not set
 	if not asteroid_scene:
 		asteroid_scene = preload("res://scenes/Asteroid.tscn")
-	
-	# Set random target count
-	target_asteroid_count = randi_range(min_asteroids, max_asteroids)
 
 func spawn_initial_asteroids(ship: Node2D) -> void:
 	ship_ref = ship
+	# Set random target count for this expedition
+	target_asteroid_count = randi_range(min_asteroids, max_asteroids)
 	# Clear any existing asteroids
 	clear_asteroids()
 	
