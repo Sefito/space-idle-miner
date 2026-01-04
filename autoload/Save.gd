@@ -73,7 +73,7 @@ func reset_save() -> void:
 	if FileAccess.file_exists(SAVE_PATH):
 		var dir = DirAccess.open("user://")
 		if dir:
-			var err = dir.remove("save.json")
+			var err = dir.remove(SAVE_PATH.get_file())
 			if err == OK:
 				print("Save file deleted")
 			else:
