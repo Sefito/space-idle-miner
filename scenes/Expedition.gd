@@ -24,7 +24,8 @@ func _ready() -> void:
 	laser.visible = false
 	
 	# Setup camera
-	camera.position = Vector2(960, 540)  # Center of 1920x1080
+	var viewport_size := get_viewport_rect().size
+	camera.position = viewport_size * 0.5  # Center of current viewport
 	camera.enabled = true
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = 5.0
