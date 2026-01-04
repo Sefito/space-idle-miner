@@ -71,11 +71,15 @@ func load_game() -> void:
 func reset_save() -> void:
 	# Delete the save file
 	if FileAccess.file_exists(SAVE_PATH):
-		var err = DirAccess.remove_absolute(SAVE_PATH)
-		if err == OK:
-			print("Save file deleted")
+		var dir = DirAccess.open("user://")
+		if dir:
+			var err = dir.remove("save.json")
+			if err == OK:
+				print("Save file deleted")
+			else:
+				push_error("Failed to delete save file, error code: " + str(err))
 		else:
-			push_error("Failed to delete save file, error code: " + str(err))
+			push_error("Failed to open user:// directory")
 	
 	# Reset game values to defaults
 	Game.minerals_total = 0.0
