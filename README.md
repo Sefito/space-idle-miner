@@ -210,10 +210,12 @@ La Fase 6 introduce mejoras significativas a la experiencia de expedición, tran
 #### Configuración de Asteroides
 - **Rango de cantidad**: 5-15 asteroides por expedición (aleatorio)
 - **Vida base**: 100 HP por asteroide
-- **Recompensa base**: 10 minerales por asteroide
+- **Recompensa base**: 10 minerales por asteroide (fijo, no afectado por upgrades)
 - **Distancia mínima de spawn**: 300 píxeles desde la nave
 - **Margen de spawn**: 5% del viewport en cada borde
 - **Variaciones visuales**: 6 sprites diferentes con rotación y escala aleatoria
+
+**Nota**: El `mining_rate` afecta la velocidad de destrucción (daño por segundo) pero no la recompensa de minerales.
 
 #### Sistema de Minado
 - **Frecuencia de láser**: Se muestra cada 0.5 segundos
