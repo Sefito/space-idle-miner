@@ -48,11 +48,29 @@ SpaceIdleMiner es un juego idle/incremental ambientado en el espacio, desarrolla
 space-idle-miner/
 ├── addons/          # Plugins y extensiones de Godot
 ├── art/             # Recursos artísticos (sprites, texturas, etc.)
+│   ├── asteroids.png           # Spritesheet con 6 asteroides diferentes
+│   ├── expedition_background.png  # Fondo del espacio para expediciones
+│   └── ship.png                # Sprite de la nave del jugador
+├── autoload/        # Scripts globales (autoload/singleton)
+│   ├── Game.gd      # Manejo de estados del juego y variables globales
+│   ├── Upgrades.gd  # Sistema de upgrades y cálculo de stats
+│   └── Save.gd      # Sistema de guardado y carga de progreso
 ├── data/            # Datos del juego (configuraciones, etc.)
-├── scenes/          # Escenas de Godot (.tscn)
-│   └── Main.tscn    # Escena principal del juego
-├── scripts/         # Scripts de GDScript
+│   └── upgrades.json  # Definición de todas las mejoras disponibles
+├── scenes/          # Escenas de Godot (.tscn) y scripts asociados
+│   ├── Main.tscn              # Escena principal del juego
+│   ├── Expedition.tscn        # Escena de expedición espacial
+│   ├── Expedition.gd          # Lógica de expedición y minado
+│   ├── Ship.tscn              # Escena de la nave del jugador
+│   ├── Ship.gd                # Control de movimiento de la nave
+│   ├── Asteroid.tscn          # Escena de asteroide individual
+│   ├── Asteroid.gd            # Lógica de asteroide (HP, minado, etc.)
+│   └── AsteroidSpawner.gd     # Sistema de generación de asteroides
 ├── ui/              # Elementos de interfaz de usuario
+│   ├── Screen_Shop.tscn       # Pantalla de tienda/upgrades
+│   ├── Screen_Shop.gd         # Lógica de la tienda
+│   ├── HUD_Expedition.tscn    # HUD durante expediciones
+│   └── HUD_Expedition.gd      # Actualización del HUD
 ├── icon.svg         # Icono del proyecto
 └── project.godot    # Archivo de configuración del proyecto
 ```
@@ -69,6 +87,26 @@ space-idle-miner/
 - **Modo de pantalla**: Pantalla completa
 - **Versión de Godot**: 4.5
 - **Escena principal**: `res://scenes/Main.tscn`
+
+## Flujo del Juego
+
+El juego alterna entre dos estados principales:
+
+### Estado: Tienda (SHOP)
+- El jugador puede comprar y mejorar upgrades usando minerales recolectados
+- Se muestran los minerales totales acumulados
+- El jugador puede iniciar una nueva expedición cuando esté listo
+- El progreso se guarda automáticamente al regresar de una expedición
+
+### Estado: Expedición (EXPEDITION)
+- El jugador controla una nave en un entorno espacial
+- Múltiples asteroides aparecen en el área de juego
+- El jugador puede moverse libremente y seleccionar asteroides para minar
+- Los asteroides son minados automáticamente una vez seleccionados
+- La expedición tiene un límite de tiempo (por defecto 30 segundos)
+- Al destruir asteroides, se obtienen minerales inmediatamente
+- La expedición termina cuando se agota el tiempo
+- Los minerales recolectados se suman al total y el juego regresa al estado de Tienda
 
 ## Sistema de Upgrades
 
@@ -149,10 +187,10 @@ La Fase 6 introduce mejoras significativas a la experiencia de expedición, tran
 - **Efectos hover**: Los asteroides cambian de color al pasar el mouse sobre ellos
 - **Flash de destrucción**: Efecto visual al destruir un asteroide
 
-### 6. Cámara Dinámica
-- **Seguimiento suave**: La cámara sigue a la nave con interpolación suave
-- **Límites de área**: La cámara está configurada para mantener el juego visible
-- **Sin mareo**: El movimiento de cámara está optimizado para no causar molestias
+### 6. Cámara Fija
+- **Vista estática**: La cámara permanece fija en el centro del viewport
+- **Área de juego visible**: El viewport completo (1920x1080) es el área de juego
+- **Límites de nave**: La nave permanece dentro de los límites del viewport mientras el jugador la controla
 
 ### Controles
 - **W / Flecha Arriba**: Mover nave hacia arriba
@@ -160,6 +198,44 @@ La Fase 6 introduce mejoras significativas a la experiencia de expedición, tran
 - **A / Flecha Izquierda**: Mover nave hacia la izquierda
 - **D / Flecha Derecha**: Mover nave hacia la derecha
 - **Click Izquierdo**: Seleccionar asteroide objetivo
+
+### Detalles Técnicos de Implementación
+
+#### Parámetros de Movimiento de la Nave
+- **Velocidad máxima**: 400 píxeles/segundo
+- **Aceleración**: 1200 píxeles/segundo²
+- **Fricción**: 800 píxeles/segundo²
+- **Tipo de nodo**: CharacterBody2D con física integrada
+
+#### Configuración de Asteroides
+- **Rango de cantidad**: 5-15 asteroides por expedición (aleatorio)
+- **Vida base**: 100 HP por asteroide
+- **Recompensa base**: 10 minerales por asteroide (fijo, no afectado por upgrades)
+- **Distancia mínima de spawn**: 300 píxeles desde la nave
+- **Margen de spawn**: 5% del viewport en cada borde
+- **Variaciones visuales**: 6 sprites diferentes con rotación y escala aleatoria
+
+#### Sistema de Minado
+- **Frecuencia de láser**: Se muestra cada 0.5 segundos
+- **Duración de flash**: 0.1 segundos por disparo
+- **Daño**: Basado en el `mining_rate` del jugador (aplicado continuamente)
+- **Color del láser**: Rojo (RGB: 1.0, 0.2, 0.2, alpha: 0.8)
+- **Ancho del láser**: 3 píxeles
+
+**Nota**: El `mining_rate` afecta solo la velocidad de destrucción de asteroides (daño por segundo). La recompensa de minerales es fija por asteroide destruido.
+
+#### Feedback Visual
+- **Color hover**: Brillo aumentado a 1.2 (20% más brillante)
+- **Color objetivo**: Tinte rojo (RGB: 1.5, 0.8, 0.8)
+- **Partículas de impacto**: 20 partículas por explosión
+- **Duración de partículas**: 0.5 segundos
+- **Velocidad de partículas**: 50-150 píxeles/segundo
+
+#### Duración de Expedición
+- **Duración base**: 30 segundos
+- **Modificable**: Puede ser ajustada mediante upgrades con el efecto `duration_add`
+- **Comportamiento**: La expedición termina automáticamente cuando el tiempo llega a 0
+- **Progreso guardado**: Los minerales recolectados se guardan al finalizar la expedición
 
 ## Licencia
 
