@@ -116,6 +116,51 @@ Los stats del juego se calculan de la siguiente manera:
 
 Este proyecto está en desarrollo activo. Siéntete libre de contribuir o reportar problemas en el repositorio de GitHub.
 
+## Fase 6: Mejoras de Expedición (Completado)
+
+La Fase 6 introduce mejoras significativas a la experiencia de expedición, transformándola de un sistema automático a uno interactivo:
+
+### 1. Movimiento de Nave (2D con Física)
+- **Controles**: WASD o flechas direccionales
+- **Física**: Aceleración y fricción para movimiento "espacial" suave
+- **Límites**: La nave permanece dentro de los límites de la pantalla
+- El movimiento se detiene gradualmente al soltar las teclas
+
+### 2. Sistema de Asteroides Múltiples
+- **Cantidad**: Entre 5 y 15 asteroides simultáneos en cada expedición
+- **Spawn inteligente**: Los asteroides aparecen en posiciones aleatorias, evitando spawnearse muy cerca de la nave
+- **Respawn automático**: Cuando un asteroide se destruye, aparece uno nuevo para mantener la cantidad objetivo
+
+### 3. Sistema de Selección de Objetivos
+- **Click para seleccionar**: Haz click en cualquier asteroide para establecerlo como objetivo
+- **Auto-target**: Si no hay objetivo seleccionado, el sistema selecciona automáticamente el asteroide más cercano
+- **Feedback visual**: El asteroide objetivo se resalta con un color diferente
+- **Re-targeting automático**: Cuando un objetivo se destruye, se selecciona automáticamente el siguiente más cercano
+
+### 4. Minado con Progreso Visual
+- **Sistema de HP**: Cada asteroide tiene puntos de vida que disminuyen según tu velocidad de minería
+- **Barra de progreso**: Cada asteroide muestra una barra de progreso sobre él cuando está siendo minado
+- **Recompensas**: Al destruir un asteroide, obtienes minerales instantáneamente
+- El sistema de minería usa el mismo `mining_rate` que antes, pero ahora aplicado como daño
+
+### 5. Feedback Visual Mejorado
+- **Láser**: Un rayo láser rojo conecta la nave con el asteroide objetivo durante el minado
+- **Partículas de impacto**: Efectos de partículas aparecen en el punto de impacto del láser
+- **Efectos hover**: Los asteroides cambian de color al pasar el mouse sobre ellos
+- **Flash de destrucción**: Efecto visual al destruir un asteroide
+
+### 6. Cámara Dinámica
+- **Seguimiento suave**: La cámara sigue a la nave con interpolación suave
+- **Límites de área**: La cámara está configurada para mantener el juego visible
+- **Sin mareo**: El movimiento de cámara está optimizado para no causar molestias
+
+### Controles
+- **W / Flecha Arriba**: Mover nave hacia arriba
+- **S / Flecha Abajo**: Mover nave hacia abajo
+- **A / Flecha Izquierda**: Mover nave hacia la izquierda
+- **D / Flecha Derecha**: Mover nave hacia la derecha
+- **Click Izquierdo**: Seleccionar asteroide objetivo
+
 ## Licencia
 
 Este proyecto aún no tiene una licencia definida. Para más información sobre el uso del código, contacta con el autor del repositorio.

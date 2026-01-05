@@ -23,14 +23,12 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if state == State.EXPEDITION:
 		# Decrease time
+		var prev_time = int(time_left)
 		time_left -= delta
 		
-		# Mine minerals
-		var minerals_mined = mining_rate * delta
-		minerals_run += minerals_mined
-		minerals_total += minerals_mined
-		
-		values_changed.emit()
+		# Emit values changed only when time changes significantly (every second)
+		if int(time_left) != prev_time:
+			values_changed.emit()
 		
 		# Check if expedition ended
 		if time_left <= 0.0:
