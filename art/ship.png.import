@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwt5lhj8rg3xj"
-path="res://.godot/imported/ship.png-1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p.ctex"
+uid="uid://57hw4oxwi0xg"
+path="res://.godot/imported/ship.png-b56ecc5483cd6d4377dd8f991e09512c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,15 @@ metadata={
 [deps]
 
 source_file="res://art/ship.png"
-dest_files=["res://.godot/imported/ship.png-1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p.ctex"]
+dest_files=["res://.godot/imported/ship.png-b56ecc5483cd6d4377dd8f991e09512c.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
@@ -25,6 +27,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
