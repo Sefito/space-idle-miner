@@ -215,14 +215,14 @@ La Fase 6 introduce mejoras significativas a la experiencia de expedición, tran
 - **Margen de spawn**: 5% del viewport en cada borde
 - **Variaciones visuales**: 6 sprites diferentes con rotación y escala aleatoria
 
-**Nota**: El `mining_rate` afecta la velocidad de destrucción (daño por segundo) pero no la recompensa de minerales.
-
 #### Sistema de Minado
 - **Frecuencia de láser**: Se muestra cada 0.5 segundos
 - **Duración de flash**: 0.1 segundos por disparo
 - **Daño**: Basado en el `mining_rate` del jugador (aplicado continuamente)
 - **Color del láser**: Rojo (RGB: 1.0, 0.2, 0.2, alpha: 0.8)
 - **Ancho del láser**: 3 píxeles
+
+**Nota**: El `mining_rate` afecta solo la velocidad de destrucción de asteroides (daño por segundo). La recompensa de minerales es fija por asteroide destruido.
 
 #### Feedback Visual
 - **Color hover**: Brillo aumentado a 1.2 (20% más brillante)
